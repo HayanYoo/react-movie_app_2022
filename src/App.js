@@ -11,8 +11,9 @@ import Home from "./routes/Home";
 import Detail from "./routes/Detail";
 
 function App() {
+    const BASE_NAME = "/react-movie_app_2022"
     return (
-        <Router>
+        <Router basename={BASE_NAME}>
             <Routes>
                 <Route path='/movie/:id' element={<Detail/>}/>
                 <Route path='/' element={<Home/>}/>
