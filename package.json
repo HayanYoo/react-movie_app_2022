@@ -38,5 +38,18 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://HayanYoo.github.io/react-movie_app_2022"
+  "homepage": "https://HayanYoo.github.io/react-movie_app_2022",
+  "description": "React JS 연습 페이지\r https://hayanyoo.github.io/react-movie_app_2022/",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HayanYoo/react-movie_app_2022.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HayanYoo/react-movie_app_2022/issues"
+  }
 }
