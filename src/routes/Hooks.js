@@ -119,8 +119,27 @@ const useNetwork = onChange => {
     return status;
 }
 
+const useScroll = () => {
+    const [state, setState] = useState({
+        x : 0,
+        y : 0,
+    })
+    const onScroll = event => {
+        console.log(window.scrollY)
+        setState({y:window.scrollY, x:window.scrollX})
+    }
+
+    useEffect(() => {
+        window.addEventListener("scroll", onScroll);
+        return () => window.removeEventListener("scroll", onScroll);
+    })
+    return state;
+}
 
 function Hooks() {
+
+    const {y} = useScroll()
+
     const handleNetworkChange = (online) => {
         console.log(online? "We just went online" : "We are offline");
     }
@@ -145,13 +164,18 @@ function Hooks() {
     const maxLen = value => !value.includes("@");
     const name = useInput("Mr, ", maxLen);
     return (
-        <div>
+        <div className="App" style={{height : "1000vh"}}>
+            <h1 style={{position : "fixed", color : y > 100 ? "red" : "blue"}}>useScroll</h1>
+
             <h1>{onLine? "Online" : " Offline"}</h1>
 
             <h1 {...fadeInH1}>FadeIn</h1>
             <p {...fadeInP}>This is fadeInHook</p>
+
             <button onClick={confirmDelete}>Delete</button>
+
             <h1 ref={title}>Hi</h1>
+
             <div>
                 <input ref={potato} placeholder="la"/>
             </div>
