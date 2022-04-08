@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 const useInput = (initialValue, validator) => {
     const [value, setValue] = useState(initialValue);
@@ -50,22 +50,51 @@ const useTitle = (initialTitle) => {
     return setTitle;
 }
 
+const useClick = (onCLick) => {
+    const element = useRef();
+    useEffect(() => {
+        if(typeof onCLick !== "function"){
+            return;
+        }
+        if(element.current){
+            element.current?.addEventListener("click", onCLick);
+        }
+
+        return () => {
+            if(element.current) {
+                element.current?.removeEventListener("click", onCLick);
+            }
+        }
+    }, [])
+    return element;
+}
 
 function Hooks() {
+    const sayHello = () => console.log("Hello")
+    const title = useClick(sayHello);
+
+    const potato = useRef()
+    setTimeout(() => potato.current?.focus(), 2000)
+
     const titleUpdater = useTitle("Loading...");
     setTimeout(() => titleUpdater("Home"), 5000)
+
     const {currentItem, changeItem} = useTabs(0, content);
     const maxLen = value => !value.includes("@");
     const name = useInput("Mr, ", maxLen);
     return (
         <div>
+            <h1 ref={title}>Hi</h1>
+            <div>
+                <input ref={potato} placeholder="la"/>
+            </div>
             <div>
                 <input placeholder="Name" {...name}/>
             </div>
             <div>
                 {
                     content.map((section, index) => (
-                        <button onClick={() => changeItem(index)}>{section.tab}</button>
+                        <button key={index} onClick={() => changeItem(index)}>{section.tab}</button>
                     ))
                 }
                 <div>
