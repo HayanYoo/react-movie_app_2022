@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import Home from "./routes/Home";
 import Detail from "./routes/Detail";
 import Hooks from "./routes/Hooks";
+import AxiosView from "./routes/AxiosView";
+
 import {
     BrowserRouter as Router,
     Routes,
@@ -17,6 +19,7 @@ function App() {
                 <Route path='/' element={<Home/>}/>
                 <Route path='/movie/:id' element={<Detail/>}/>
                 <Route path='/hooks' element={<Hooks/>}/>
+                <Route path='/axios' element={<AxiosView/>}/>
             </Routes>
         </Router>)
         ;
