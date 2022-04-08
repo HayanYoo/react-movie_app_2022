@@ -31,12 +31,12 @@ const content = [
 
 const useTabs = (initialTab, allTabs) => {
     const [currentIndex, setCurrentIndex] = useState(initialTab);
-    if(!allTabs || !Array.isArray(allTabs)){
+    if (!allTabs || !Array.isArray(allTabs)) {
         return
     }
     return {
-        currentItem : allTabs[currentIndex],
-        changeItem : setCurrentIndex
+        currentItem: allTabs[currentIndex],
+        changeItem: setCurrentIndex
     }
 }
 
@@ -53,15 +53,15 @@ const useTitle = (initialTitle) => {
 const useClick = (onCLick) => {
     const element = useRef();
     useEffect(() => {
-        if(typeof onCLick !== "function"){
+        if (typeof onCLick !== "function") {
             return;
         }
-        if(element.current){
+        if (element.current) {
             element.current?.addEventListener("click", onCLick);
         }
 
         return () => {
-            if(element.current) {
+            if (element.current) {
                 element.current?.removeEventListener("click", onCLick);
             }
         }
@@ -70,22 +70,67 @@ const useClick = (onCLick) => {
 }
 
 const useConfirm = (message = "", callback) => {
-    if(typeof callback !== "function"){
+    if (typeof callback !== "function") {
         return
     }
 
     const conformAction = () => {
-        if(window.confirm(message)){
+        if (window.confirm(message)) {
             callback();
         }
     }
-
     return conformAction;
 }
 
+const useFadeIn = (duration = 1, delay = 0) => {
+
+    const element = useRef();
+    useEffect(() => {
+        if (typeof duration !== "number" || typeof delay !== "number") {
+            return
+        }
+
+        if (element.current) {
+            const {current} = element;
+            current.style.transition = `opacity ${duration}s ease-in-out ${delay}s`;
+            current.style.opacity = 1;
+        }
+    }, [])
+    return {ref: element, style: {opacity: 0}};
+}
+
+const useNetwork = onChange => {
+    const [status, setStatus] = useState(navigator.onLine);
+    const handleChange = () => {
+        if (typeof onChange === "function") {
+            onChange(navigator.onLine)
+        }
+        setStatus(navigator.onLine)
+    }
+    useEffect(() => {
+        window.addEventListener("online", handleChange);
+        window.addEventListener("offline", handleChange);
+        return () => {
+            window.removeEventListener("online", handleChange);
+            window.removeEventListener("offline", handleChange);
+        }
+    }, [])
+
+    return status;
+}
+
+
 function Hooks() {
+    const handleNetworkChange = (online) => {
+        console.log(online? "We just went online" : "We are offline");
+    }
+    const onLine = useNetwork(handleNetworkChange);
+
+    const fadeInH1 = useFadeIn(1, 2);
+    const fadeInP = useFadeIn(5, 10);
+
     const deleteWorld = () => console.log("Deleting the world...")
-    const confirmDelete = useConfirm("Are you sure delete?", deleteWorld )
+    const confirmDelete = useConfirm("Are you sure delete?", deleteWorld)
 
     const sayHello = () => console.log("Hello")
     const title = useClick(sayHello);
@@ -101,6 +146,10 @@ function Hooks() {
     const name = useInput("Mr, ", maxLen);
     return (
         <div>
+            <h1>{onLine? "Online" : " Offline"}</h1>
+
+            <h1 {...fadeInH1}>FadeIn</h1>
+            <p {...fadeInP}>This is fadeInHook</p>
             <button onClick={confirmDelete}>Delete</button>
             <h1 ref={title}>Hi</h1>
             <div>
@@ -116,7 +165,7 @@ function Hooks() {
                     ))
                 }
                 <div>
-                {currentItem.content}
+                    {currentItem.content}
                 </div>
             </div>
         </div>
