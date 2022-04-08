@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const useInput = (initialValue, validator) => {
     const [value, setValue] = useState(initialValue);
@@ -40,8 +40,20 @@ const useTabs = (initialTab, allTabs) => {
     }
 }
 
+const useTitle = (initialTitle) => {
+    const [title, setTitle] = useState(initialTitle)
+    const updateTitle = () => {
+        const htmlTitle = document.querySelector("title");
+        htmlTitle.innerText = title;
+    };
+    useEffect(updateTitle, [title]);
+    return setTitle;
+}
+
 
 function Hooks() {
+    const titleUpdater = useTitle("Loading...");
+    setTimeout(() => titleUpdater("Home"), 5000)
     const {currentItem, changeItem} = useTabs(0, content);
     const maxLen = value => !value.includes("@");
     const name = useInput("Mr, ", maxLen);
