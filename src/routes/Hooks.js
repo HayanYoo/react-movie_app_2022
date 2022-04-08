@@ -69,7 +69,24 @@ const useClick = (onCLick) => {
     return element;
 }
 
+const useConfirm = (message = "", callback) => {
+    if(typeof callback !== "function"){
+        return
+    }
+
+    const conformAction = () => {
+        if(window.confirm(message)){
+            callback();
+        }
+    }
+
+    return conformAction;
+}
+
 function Hooks() {
+    const deleteWorld = () => console.log("Deleting the world...")
+    const confirmDelete = useConfirm("Are you sure delete?", deleteWorld )
+
     const sayHello = () => console.log("Hello")
     const title = useClick(sayHello);
 
@@ -84,6 +101,7 @@ function Hooks() {
     const name = useInput("Mr, ", maxLen);
     return (
         <div>
+            <button onClick={confirmDelete}>Delete</button>
             <h1 ref={title}>Hi</h1>
             <div>
                 <input ref={potato} placeholder="la"/>
