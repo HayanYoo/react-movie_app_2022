@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from "react";
+import {elementType} from "prop-types";
 
 const useInput = (initialValue, validator) => {
     const [value, setValue] = useState(initialValue);
@@ -136,7 +137,31 @@ const useScroll = () => {
     return state;
 }
 
+const useFullscreen = (callback) => {
+    const element = useRef();
+    const triggerFull = () => {
+        if(element.current){
+            element.current?.requestFullscreen();
+            if(callback && typeof callback === "function"){
+                callback(true)
+            }
+        }
+    }
+
+    const exitFull = () => {
+        document.exitFullscreen();
+        if (callback && typeof callback === "function") {
+            callback(false)
+        }
+    }
+    return {element, triggerFull, exitFull}
+}
+
 function Hooks() {
+    const onFullS = (isFull) => {
+        console.log(isFull? "We are full" : "We are small");
+    }
+    const {element, triggerFull, exitFull} = useFullscreen(onFullS);
 
     const {y} = useScroll()
 
@@ -165,7 +190,17 @@ function Hooks() {
     const name = useInput("Mr, ", maxLen);
     return (
         <div className="App" style={{height : "1000vh"}}>
-            <h1 style={{position : "fixed", color : y > 100 ? "red" : "blue"}}>useScroll</h1>
+
+            <div >
+                <div ref={element}>
+                <img
+                    src="https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AAVZetU.img?h=344&w=270&m=6&q=60&o=f&l=f&x=325&y=364"/>
+                <button onClick={exitFull}>exit fullscreen</button>
+                </div>
+                <button onClick={triggerFull}>Make fullscreen</button>
+            </div>
+
+            <h1 style={{position : "fixed", left:"500px" , color : y > 100 ? "red" : "blue"}}>useScroll</h1>
 
             <h1>{onLine? "Online" : " Offline"}</h1>
 
