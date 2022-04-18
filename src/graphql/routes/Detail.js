@@ -10,7 +10,10 @@ const GET_MOVIE = gql`
             id
             title
             medium_cover_image
+            language
+            rating
             description_intro
+            isLiked @client
         }
     }`;
 
@@ -57,22 +60,26 @@ const Poster = styled.div`
 export default () => {
     const {id} = useParams();
     const {loading, data} = useQuery(GET_MOVIE, {
-        variables: {id : +id}
+        variables: {id: +id}
     });
     return (
         <Container>
-            <Column>
-                <Title>
-                    {loading
-                        ? "Loading..."
-                        : `${data.movie.title} ${data.movie.isLiked ? "💖" : "😞"}`}
-                </Title>
-                <Subtitle>
-                    {data?.movie?.language} · {data?.movie?.rating}
-                </Subtitle>
-                <Description>{data?.movie?.description_intro}</Description>
-            </Column>
+            {loading ?
+                <Title>"Loading..."</Title>
+                :
+                <Column>
+                    <Title>
+                        {data.movie.title} {data.movie.isLiked ? "💖" : "😞"}
+                    </Title>
+                    <Subtitle>
+                        {data?.movie?.language.toUpperCase()} · {data?.movie?.rating}
+                    </Subtitle>
+                    <Description>{data?.movie?.description_intro}</Description>
+                </Column>
+            }
             <Poster bg={data?.movie?.medium_cover_image}></Poster>
+
+
         </Container>
     );
 }
