@@ -7,8 +7,7 @@ import styled from "styled-components";
 const GET_MOVIES = gql`{
     movies {
         id
-        description_intro
-        title
+        medium_cover_image
     }
 }`
 
